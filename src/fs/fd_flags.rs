@@ -89,21 +89,11 @@ impl<T> GetSetFdFlags for T {
         #[cfg(not(target_os = "freebsd"))]
         fd_flags.set(FdFlags::DSYNC, flags.contains(OFlags::DSYNC));
         fd_flags.set(FdFlags::NONBLOCK, flags.contains(OFlags::NONBLOCK));
-        #[cfg(any(
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "freebsd",
-            target_os = "fuchsia"
-        ))]
+        #[cfg(any(target_vendor = "apple", target_os = "freebsd", target_os = "fuchsia"))]
         {
             fd_flags.set(FdFlags::SYNC, flags.contains(OFlags::SYNC));
         }
-        #[cfg(not(any(
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "freebsd",
-            target_os = "fuchsia"
-        )))]
+        #[cfg(not(any(target_vendor = "apple", target_os = "freebsd", target_os = "fuchsia")))]
         {
             fd_flags.set(FdFlags::RSYNC, flags.contains(OFlags::RSYNC));
             fd_flags.set(FdFlags::SYNC, flags.contains(OFlags::SYNC));
